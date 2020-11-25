@@ -25,3 +25,17 @@ Elf64_Shdr *search_shdr_by_name(Elf64_Ehdr *ehdr, const char *name) {
     return NULL;
 }
 
+bool clear_bss(Elf64_Ehdr *ehdr) {
+    const char *bss = ".bss";
+    Elf64_Shdr *shdr = search_shdr_by_name(ehdr, bss);
+    if (shdr) {
+        printf("clear BSS: 0x%08lx, 0x%08lx\n", shdr->sh_addr, shdr->sh_size);
+        memset((char *)shdr->sh_addr, 0, shdr->sh_size);
+        printf("clear BSS complete\n");
+        return true;
+    } else {
+        fprintf(stderr, ".bss section not found\n");
+        return false;
+    }
+}
+
